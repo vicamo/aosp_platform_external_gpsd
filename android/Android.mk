@@ -386,3 +386,35 @@ LOCAL_SHARED_LIBRARIES := \
     $(empty)
 
 include $(BUILD_EXECUTABLE)
+
+########################################
+# gps.gpsd HAL module
+#
+# To use this module:
+#
+#   1.1) define BOARD_USES_CATB_GPSD_GPS to true, and/or
+#   1.2) ADDITIONAL_BUILD_PROPERTIES += ro.hardware.gps=<variant>
+#   2) add gps.<variant> to PRODUCT_PACKAGES
+#
+# Note that `gps.${ro.hardware}` have higher priority than
+# $(TARGET_BOOTLOADER_BOARD_NAME) and $(TARGET_BOARD_PLATFORM), which
+# might even be empty in emulators. So if your platform have already
+# `gps.${ro.hardware}`, or `gps.gpsd` is chosen here, you must define
+# ${ro.hardware.gps} to override it.
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := gps.$(word 1,$(if $(filter true,$(BOARD_USES_CATB_GPSD_GPS)),$(TARGET_BOOTLOADER_BOARD_NAME) $(TARGET_BOARD_PLATFORM) default) gpsd)
+all-gpsd-modules: $(LOCAL_MODULE)
+
+LOCAL_MODULE_RELATIVE_PATH := hw
+
+LOCAL_SRC_FILES := \
+    android/hal_module.c \
+    $(empty)
+
+LOCAL_SHARED_LIBRARIES := \
+    libhardware \
+    $(empty)
+
+include $(BUILD_SHARED_LIBRARY)
