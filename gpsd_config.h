@@ -16,7 +16,7 @@
 
 #define HAVE_LINUX_CAN_H 1
 
-/* #undef HAVE_STDATOMIC_H */
+#define HAVE_STDATOMIC_H 1
 
 /* #undef HAVE_OSATOMIC_H */
 
@@ -48,9 +48,9 @@
 
 #define HAVE_DAEMON 1
 
-/* #undef HAVE_STRLCPY */
+#define HAVE_STRLCPY 1
 
-/* #undef HAVE_STRLCAT */
+#define HAVE_STRLCAT 1
 
 #define HAVE_CLOCK_GETTIME 1
 
@@ -134,10 +134,10 @@
 #define GPSD_ENABLE 1
 
 /* privilege revocation group */
-#define GPSD_GROUP "dialout"
+#define GPSD_GROUP "gps"
 
 /* privilege revocation user */
-#define GPSD_USER "nobody"
+#define GPSD_USER "gps"
 
 /* gspd client programs */
 #define GPSDCLIENTS_ENABLE 1

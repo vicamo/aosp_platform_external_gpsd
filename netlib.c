@@ -194,6 +194,9 @@ socket_t netlib_localsocket(const char *sockfile, int socktype)
 		      sockfile,
 		      sizeof(saddr.sun_path));
 
+#ifndef SUN_LEN
+#define SUN_LEN(ptr) ((size_t) (((struct sockaddr_un *) 0)->sun_path) + strlen((ptr)->sun_path))
+#endif /* SUN_LEN */
 	if (connect(sock, (struct sockaddr *)&saddr, SUN_LEN(&saddr)) < 0) {
 	    (void)close(sock);
 	    return -2;

@@ -1,0 +1,24 @@
+########################################
+# /system/bin/logwrapper
+#
+# Android has marked /system/bin/logwrapper as system_file under
+# external/sepolicy/file_contexts. In order to redirect gpsd debug
+# messages to logcat, one must comment out aforementioned line and
+# uncomment all below.
+
+#type logwrapper, domain;
+#type logwrapper_exec, exec_type, file_type;
+#
+#init_daemon_domain(logwrapper)
+#
+#allow logwrapper devpts:chr_file rw_file_perms;
+## allow using pty from logwrapper
+#allow catb_gpsd logwrapper:fd use;
+#domain_auto_trans(logwrapper, catb_gpsd_exec, catb_gpsd);
+#
+####
+#### neverallow
+####
+#
+#neverallow logwrapper self:capability *;
+#neverallow logwrapper self:capability2 *;

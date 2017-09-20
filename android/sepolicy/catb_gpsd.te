@@ -1,0 +1,27 @@
+########################################
+# /system/bin/gpsd
+#
+# Android has already sepolicy rules for /system/vendor/bin/gpsd, so
+# we use a different prefix here.
+
+type catb_gpsd, domain;
+type catb_gpsd_exec, exec_type, file_type;
+
+init_daemon_domain(catb_gpsd)
+net_domain(catb_gpsd)
+
+# control socket is created by the daemon, not by init
+allow catb_gpsd gps_data_file:dir rw_dir_perms;
+allow catb_gpsd gps_data_file:notdevfile_class_set create_file_perms;
+type_transition catb_gpsd gps_data_file:sock_file catb_gpsd_socket;
+allow catb_gpsd catb_gpsd_socket:sock_file create_file_perms;
+
+allow catb_gpsd devpts:chr_file rw_file_perms;
+allow catb_gpsd gps_device:chr_file rw_file_perms;
+
+###
+### neverallow
+###
+
+neverallow catb_gpsd self:capability *;
+neverallow catb_gpsd self:capability2 *;
