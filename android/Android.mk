@@ -414,7 +414,11 @@ LOCAL_SRC_FILES := \
     $(empty)
 
 LOCAL_SHARED_LIBRARIES := \
+    liblog \
     libhardware \
+    libgps \
     $(empty)
+
+LOCAL_REQUIRED_MODULES := gpsd
 
 include $(BUILD_SHARED_LIBRARY)
