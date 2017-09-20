@@ -48,6 +48,9 @@
 #if defined(NMEA2000_ENABLE)
 #include "driver_nmea2000.h"
 #endif /* defined(NMEA2000_ENABLE) */
+#if defined(QEMUDPIPE_ENABLE)
+#include "driver_qemudpipe.h"
+#endif /* defined(QEMUDPIPE_ENABLE) */
 
 ssize_t gpsd_write(struct gps_device_t *session,
 		   const char *buf,
@@ -547,6 +550,11 @@ int gpsd_open(struct gps_device_t *session)
         return nmea2000_open(session);
     }
 #endif /* defined(NMEA2000_ENABLE) */
+#if defined(QEMUDPIPE_ENABLE)
+    if (str_starts_with(session->gpsdata.dev.path, "qemud://")) {
+        return qemudpipe_open(session);
+    }
+#endif
     /* fall through to plain serial open */
     /* could be a naked /dev/ppsX */
     return gpsd_serial_open(session);

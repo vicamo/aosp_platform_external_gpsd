@@ -18,6 +18,7 @@ allow catb_gpsd catb_gpsd_socket:sock_file create_file_perms;
 
 allow catb_gpsd devpts:chr_file rw_file_perms;
 allow catb_gpsd gps_device:chr_file rw_file_perms;
+unix_socket_connect(catb_gpsd, qemud, qemud)
 
 ###
 ### neverallow

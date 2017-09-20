@@ -143,6 +143,7 @@ boolopts = (
     ("ublox",         True,  "u-blox Protocol support"),
     ("fury",          True,  "Jackson Labs Fury and Firefly support"),
     ("nmea2000",      True,  "NMEA2000/CAN support"),
+    ("qemudpipe",     False, "ANDROID QEMUD pipe support"),
     # Non-GPS protocols
     ("aivdm",         True,  "AIVDM support"),
     ("gpsclock",      True,  "GPSClock support"),
@@ -1102,6 +1103,7 @@ libgpsd_sources = [
     "driver_nmea0183.c",
     "driver_nmea2000.c",
     "driver_oncore.c",
+    "driver_qemudpipe.c",
     "driver_rtcm2.c",
     "driver_rtcm3.c",
     "driver_sirf.c",

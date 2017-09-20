@@ -127,6 +127,7 @@ LOCAL_SRC_FILES := \
     driver_nmea0183.c \
     driver_nmea2000.c \
     driver_oncore.c \
+    driver_qemudpipe.c \
     driver_rtcm2.c \
     driver_rtcm3.c \
     driver_sirf.c \
@@ -147,6 +148,7 @@ LOCAL_C_INCLUDES := \
     $(libgps_gen_intermediates) \
     $(empty)
 LOCAL_SHARED_LIBRARIES := \
+    libcutils \
     libgps \
     $(empty)
 
@@ -189,8 +191,8 @@ include $(BUILD_EXECUTABLE)
 #   ADDITIONAL_BUILD_PROPERTIES += ro.gpsd.sources=/dev/ttyS0
 #
 # ${ro.gpsd.sources} should follow gpsd's data source format, e.g.
-# "/dev/ttyS0". For older platforms, a similar section must be added
-# to init.rc. On Android-M:
+# "/dev/ttyS0" or "qemud://gps" on emulators. For older platforms, a
+# similar section must be added to init.rc. On Android-M:
 #
 #   on post-fs-data
 #     mkdir /data/gps 0770 gps system

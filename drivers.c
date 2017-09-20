@@ -1745,6 +1745,7 @@ extern const struct gps_type_t driver_italk;
 extern const struct gps_type_t driver_navcom;
 extern const struct gps_type_t driver_nmea2000;
 extern const struct gps_type_t driver_oncore;
+extern const struct gps_type_t driver_qemudpipe;
 extern const struct gps_type_t driver_sirf;
 extern const struct gps_type_t driver_skytraq;
 extern const struct gps_type_t driver_superstar2;
@@ -1854,6 +1855,10 @@ static const struct gps_type_t *gpsd_driver_array[] = {
 #if defined(PPS_ENABLE)
     &driver_pps,
 #endif /* PPS_ENABLE */
+
+#ifdef QEMUDPIPE_ENABLE
+    &driver_qemudpipe,
+#endif /* QEMUDPIPE_ENABLE */
 
     NULL,
 };

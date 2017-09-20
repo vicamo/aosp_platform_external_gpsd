@@ -250,6 +250,9 @@
 /* Python module directory prefix */
 /* #undef PYTHON_LIBDIR */
 
+/* ANDROID QEMUD pipe support */
+#define QEMUDPIPE_ENABLE 1
+
 /* build QT bindings */
 /* #undef QT_ENABLE */
 
