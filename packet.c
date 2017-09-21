@@ -1628,6 +1628,7 @@ static void character_discard(struct gps_lexer_t *lexer)
 
 void lexer_init(struct gps_lexer_t *lexer)
 {
+    lexer->flags = 0;
     lexer->char_counter = 0;
     lexer->retry_counter = 0;
 #ifdef PASSTHROUGH_ENABLE
@@ -1669,7 +1670,8 @@ void packet_parse(struct gps_lexer_t *lexer)
 	     * $PASHR packets have no checksum. Avoid the possibility
 	     * that random garbage might make it look like they do.
 	     */
-	    if (!str_starts_with((const char *)lexer->inbuffer, "$PASHR,"))
+	    if (!str_starts_with((const char *)lexer->inbuffer, "$PASHR,")
+		&& !(lexer->flags & LEXER_F_IGNORE_CHECKSUM))
 	    {
 		bool checksum_ok = true;
 		char csum[3] = { '0', '0', '0' };

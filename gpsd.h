@@ -175,6 +175,8 @@ struct gps_lexer_t {
 #define PACKET_TYPEMASK(n)	(1 << (n))
 #define GPS_TYPEMASK	(((2<<(MAX_GPSPACKET_TYPE+1))-1) &~ PACKET_TYPEMASK(COMMENT_PACKET))
     unsigned int state;
+    unsigned int flags;
+#define LEXER_F_IGNORE_CHECKSUM	(1 << 0)
     size_t length;
     unsigned char inbuffer[MAX_PACKET_LENGTH*2+1];
     size_t inbuflen;

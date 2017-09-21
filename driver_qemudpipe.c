@@ -26,6 +26,12 @@ int qemudpipe_open(struct gps_device_t *session)
     return session->gpsdata.gps_fd;
 }
 
+static void qemudpipe_event_hook(struct gps_device_t *session, event_t event)
+{
+    if (event == event_reactivate)
+	session->lexer.flags |= LEXER_F_IGNORE_CHECKSUM;
+}
+
 /* *INDENT-OFF* */
 const struct gps_type_t driver_qemudpipe = {
     .type_name      = "qemudpipe",	/* full name of type */
@@ -38,7 +44,7 @@ const struct gps_type_t driver_qemudpipe = {
     .parse_packet   = generic_parse_input,	/* how to interpret a packet */
     .rtcm_writer    = NULL,		/* write RTCM data straight */
     .init_query     = NULL,		/* non-perturbing initial query */
-    .event_hook     = NULL,		/* lifetime event handler */
+    .event_hook     = qemudpipe_event_hook,	/* lifetime event handler */
 #ifdef RECONFIGURE_ENABLE
     .speed_switcher = NULL,		/* no speed switcher */
     .mode_switcher  = NULL,		/* no mode switcher */
