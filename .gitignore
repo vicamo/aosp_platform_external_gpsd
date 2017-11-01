@@ -77,10 +77,8 @@ srec.html
 gps_maskdump.c
 gpsd_maskdump.c
 gpsd_config.h.in
-gpsd_config.h
 packet_names.h
 revision.h
-timebase.h
 gpsd.spec
 MANIFEST
 .kdbgrc.*
