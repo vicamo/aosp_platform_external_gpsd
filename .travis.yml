@@ -1,17 +1,46 @@
 sudo: required
-language: generic
-
-# Some versions of clang++ don't work with some C++ headers, due to an
-# issue with __float128.  Until this is reproducible in a more debuggable
-# context, we disable the C++ builds in the clang case.
+services:
+- docker
+language: c
 
 env:
-    - TRAVIS_DEBIAN_DISTRIBUTION=unstable TRAVIS_DEBIAN_BUILD_COMMAND="/bin/bash .travis.build" TRAVIS_DEBIAN_BUILD_DEPENDENCIES="build-essential debhelper po-debconf python-all-dev python-all-dbg xsltproc docbook-xsl docbook-xml asciidoc libncurses-dev libusb-1.0-0-dev libdbus-1-dev libglib2.0-dev libdbus-glib-1-dev makedev libbluetooth-dev libqt4-dev lsb-release bc dpkg-dev scons chrpath dh-buildinfo pps-tools dh-systemd"
-    - TRAVIS_DEBIAN_DISTRIBUTION=unstable TRAVIS_DEBIAN_BUILD_COMMAND="/bin/bash .travis.build libgpsmm=no qt=no" TRAVIS_DEBIAN_BUILD_DEPENDENCIES="build-essential debhelper po-debconf python-all-dev python-all-dbg xsltproc docbook-xsl docbook-xml asciidoc libncurses-dev libusb-1.0-0-dev libdbus-1-dev libglib2.0-dev libdbus-glib-1-dev makedev libbluetooth-dev libqt4-dev lsb-release bc dpkg-dev scons chrpath dh-buildinfo pps-tools dh-systemd clang" TRAVIS_DEBIAN_BUILD_ENVIRONMENT="CC=clang CXX=clang++"
-    - TRAVIS_DEBIAN_DISTRIBUTION=stable TRAVIS_DEBIAN_BUILD_COMMAND="/bin/bash .travis.build" TRAVIS_DEBIAN_BUILD_DEPENDENCIES="build-essential debhelper po-debconf python-all-dev python-all-dbg xsltproc docbook-xsl docbook-xml asciidoc libncurses-dev libusb-1.0-0-dev libdbus-1-dev libglib2.0-dev libdbus-glib-1-dev makedev libbluetooth-dev libqt4-dev lsb-release bc dpkg-dev scons chrpath dh-buildinfo pps-tools dh-systemd"
+  global:
+  - DOCKER_EXEC_ROOT="sudo docker exec --user root test_container"
+  - DOCKER_EXEC="sudo docker exec --user $(id -u) test_container"
+  matrix:
+  - ANDROID_BRANCH=nougat-dev ANDROID_DEVICE=aosp_arm64-eng
 
-services:
-  - docker
+branches:
+  only:
+  - master
+
+before_install:
+- docker run --rm --privileged vicamo/binfmt-qemu:latest
+- cat /proc/sys/fs/binfmt_misc/qemu-*
+
+install:
+- sudo curl https://storage.googleapis.com/git-repo-downloads/repo -o /usr/local/bin/repo
+- sudo chmod +x /usr/local/bin/repo
+- git config --global color.ui auto
+- export ANDROID_BUILD_TOP=${TRAVIS_BUILD_DIR%${TRAVIS_REPO_SLUG}}/${ANDROID_BRANCH}
+- mkdir -p ${ANDROID_BUILD_TOP}
+- |
+  (cd ${ANDROID_BUILD_TOP}; \
+    repo --no-pager --color=never \
+      init \
+      --manifest-url https://android.googlesource.com/platform/manifest \
+      --manifest-branch ${ANDROID_BRANCH} \
+      --groups pdk,pdk-cw-fs \
+      --depth 1; \
+    repo sync -j$(nproc))
+- |
+  sudo docker run --detach \
+    --name test_container \
+    --volume ${ANDROID_BUILD_TOP}:${ANDROID_BUILD_TOP} \
+    --volume ${TRAVIS_BUILD_DIR}:${ANDROID_BUILD_TOP}/external/gpsd \
+    --workdir ${ANDROID_BUILD_TOP} \
+    vicamo/android-pdk:xenial-openjdk-7 \
+    /bin/bash
 
 script:
-  - wget -O- http://build-in-debian.bzed.at/script.sh | sh -
+- ${DOCKER_EXEC} /bin/bash -c "source build/envsetup.sh; lunch ${ANDROID_DEVICE}; make -j$(nproc) -k all-gpsd-modules"
