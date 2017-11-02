@@ -1,4 +1,4 @@
 /data/gps/gpsd.sock	u:object_r:catb_gpsd_socket:s0
 /system/bin/gpsd	u:object_r:catb_gpsd_exec:s0
 # Uncomment to run gpsd with logwrapper
-#/system/bin/logwrapper	u:object_r:logwrapper_exec:s0
+/system/bin/logwrapper	u:object_r:logwrapper_exec:s0

@@ -2,8 +2,8 @@ on post-fs-data
     mkdir /data/gps 0770 gps system
 
 # Uncomment to run gpsd with logwrapper
-#service gpsd /system/bin/logwrapper /system/bin/gpsd -F /data/gps/gpsd.sock -N -D 6 ${ro.gpsd.sources}
-service gpsd /system/bin/gpsd -F /data/gps/gpsd.sock -N ${ro.gpsd.sources}
+service gpsd /system/bin/logwrapper /system/bin/gpsd -F /data/gps/gpsd.sock -N -D 6 ${ro.gpsd.sources}
+#service gpsd /system/bin/gpsd -F /data/gps/gpsd.sock -N ${ro.gpsd.sources}
     class late_start
     user gps
     group gps inet

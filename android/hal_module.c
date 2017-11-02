@@ -15,11 +15,11 @@
 #include <cutils/sockets.h>
 #include <hardware/gps.h>
 
-#define  GPS_DEBUG  0
+#define  GPS_DEBUG  1
 
 #if GPS_DEBUG
 #  define  D(...)   ALOGD(__VA_ARGS__)
-#  define  V(...)   ALOGV(__VA_ARGS__)
+#  define  V(...)   ALOGD(__VA_ARGS__)
 #else
 #  define  D(...)   ((void)0)
 #  define  V(...)   ((void)0)
